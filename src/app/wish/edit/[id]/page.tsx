@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Container } from "@/components/shared";
 import { Button, InputWithLabel, TextareaWithLabel } from "@/components/ui";
@@ -8,6 +8,8 @@ import { Button, InputWithLabel, TextareaWithLabel } from "@/components/ui";
 import { CornerUpRight, SaveAll, Trash2 } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { auth } from "@/lib/firebase/firebase";
+import { signInWithEmailAndPassword, User } from "firebase/auth";
 
 const item = {
   id: 1,
@@ -24,6 +26,33 @@ export default function WishEditPage({
 }: {
   params: { id: string };
 }) {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user !== null) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        "uhmahmar89@gmail.com",
+        "Viktor-97"
+      );
+      setUser(userCredential.user);
+    } catch (error) {
+      console.error("Ошибка входа:", error);
+    }
+  };
+
   const router = useRouter();
   const {
     register,
@@ -32,6 +61,7 @@ export default function WishEditPage({
     formState: { errors },
   } = useForm({
     values: item,
+    defaultValues: item,
   });
 
   const exit = () => router.push(`/`);
@@ -50,21 +80,27 @@ export default function WishEditPage({
 
   return (
     <Container className="mt-10 px-8 flex flex-col items-center gap-4">
+      <div>
+        {user ? (
+          <p>Привет, {user.email}</p>
+        ) : (
+          <button onClick={handleLogin}>Войти</button>
+        )}
+      </div>
       <form
         className="w-full border flex flex-row rounded-lg transotion-all shadow-white-shadow hover:shadow-gold-shadow-hover max-md:flex-col"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {/* image */}
         <div className="w-[30%] flex flex-col justify-between gap-2 p-4  max-md:px-10 max-md:w-full">
           <img src={item.image} alt="image" className="max-md:w-[50%]" />
           <InputWithLabel
             value={item.image}
             label="Ссылка на изображение"
             className="transition-all hover:border-amber-800 bg-black max-md:w-full "
+            {...register("image")}
           />
         </div>
 
-        {/* description */}
         <div className="w-full  flex flex-col gap-2 max-sm:pb-96">
           <div className="flex justify-end p-1 max-md:fixed max-md:bottom-5 max-md:right-5">
             <div className="border bg-black border-amber-600 border-opacity-50 flex flex-row rounded-md transition-all hover:border-opacity-80 max-md:border-yellow-100 max-md:bg-opacity-75 max-md:scale-80  ">
@@ -89,21 +125,25 @@ export default function WishEditPage({
               value={item.name}
               label="Наименование"
               className="transition-all hover:border-amber-800 bg-black"
+              {...register("name")}
             />
             <TextareaWithLabel
               value={item.description}
               label="Описание"
               className="transition-all hover:border-amber-800 bg-black"
+              {...register("description")}
             />
             <InputWithLabel
               value={item.price}
               label="Цена в рублях"
               className="transition-all hover:border-amber-800 bg-black"
+              {...register("price")}
             />
             <InputWithLabel
               value={item.link}
               label="Ссылка"
               className="transition-all hover:border-amber-800 bg-black"
+              {...register("link")}
             />
           </div>
         </div>

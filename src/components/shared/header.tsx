@@ -1,11 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { Container, Title, TopBar } from ".";
+import { Auth, Container } from ".";
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "../ui";
-import { ArrowRight, ShoppingCart, User } from "lucide-react";
-import { Rye } from "next/font/google";
 
 interface Props {
   className?: string;
@@ -30,10 +27,7 @@ export const Header: React.FC<Props> = ({ className }) => {
         <div className="mx-10 flex-1">{/* <SearchInput /> */}</div>
 
         <div className="flex items-center gap-3">
-          <Button variant={"outline"} className="flex items-center gap-1">
-            Войти
-            <User size={16} />
-          </Button>
+          <Auth />
         </div>
       </Container>
     </header>

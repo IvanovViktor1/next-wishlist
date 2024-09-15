@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "wishlist-edbd2"
-  }
+    "default": "wishlist-edbd2",
+    "wishlist_1": "wishlist-edbd2"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
