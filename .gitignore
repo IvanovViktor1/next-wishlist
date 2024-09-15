@@ -38,7 +38,7 @@ yarn-error.log*
 next-env.d.ts
 
 # Логи Firebase
-firebase-debug.log
+firebase-debug.log 
 /services/authService.ts
 
 src/config/google-credentials.json
