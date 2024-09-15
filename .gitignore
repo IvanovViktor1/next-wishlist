@@ -41,4 +41,4 @@ next-env.d.ts
 firebase-debug.log
 /services/authService.ts
 
- 
+src/config/google-credentials.json
